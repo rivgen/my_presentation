@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    <div class="user-header">
+        {{ parent() }}
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid user-content">
+        {% if results|length is same as(0) %}
+            <div class="row voting-result-wrapper">
+                <div class=" col-12 title-wrapper d-flex">
+                    <p class="text-left">{{ 'voting_labels.not' | trans }}</p>
+                </div>
+            </div>
+        {% else %}
+            {% for groups in results %}
+                <div class="row voting-result-wrapper">
+                    <div class=" col-12 title-wrapper d-flex">
+                        <p class="text-left">{{ groups['voting_question'] }}</p>
+                    </div>
+                    {% for item in groups['voting_result'] %}
+                        <div class=" col-12 table-wrapper d-flex"><a class="votingGroup" href="javascript:void(0)"
+                                                                     data-index="{{ loop.index }}"
+                                                                     data-question-id="{{ groups['voting_question_id'] }}">
+                                <p>{{ 'voting_labels.№' | trans }}{{ loop.index }}</p>
+                            </a></div>
+                        <div class=" col-12 table-wrapper d-flex">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    {% if item['votes_agree'] %}
+                                    <th class="title"><a class="jsVotesResult"
+                                                         data-questions-id="{{ groups['voting_question_id'] }}"
+                                                         data-group="{{ loop.index }}"
+                                                         data-voting="agree"
+                                                         href="javascript:void(0)">{{ 'voting_labels.amount_of_agree' | trans | upper }}</a></th>
+                                    {% else %}
+                                    <th class="title">{{ 'voting_labels.amount_of_agree' | trans | upper }}</th>
+                                    {% endif %}
+                                    <td>{{ item['votes_agree'] }}</td>
+                                </tr>
+                                <tr>
+                                    {% if item['voting_disagree'] %}
+                                        <th class="title"><a class="jsVotesResult"
+                                                             data-questions-id="{{ groups['voting_question_id'] }}"
+                                                             data-group="{{ loop.index }}"
+                                                             data-voting="disagree"
+                                                             href="javascript:void(0)">{{ 'voting_labels.amount_of_disagree' | trans | upper }}</a></th>
+                                    {% else %}
+                                        <th class="title">{{ 'voting_labels.amount_of_disagree' | trans | upper }}</th>
+                                    {% endif %}
+                                    <td>{{ item['voting_disagree'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="title">{{ 'voting_labels.amount_of_neutral' | trans | upper }}</th>
+                                    <td>{{ item['votes_neutral'] }}</td>
+                                </tr>
+                                <tr>
+                                    {% if item['votes_ignore'] %}
+                                        <th class="title"><a class="jsVotesResult"
+                                                             data-questions-id="{{ groups['voting_question_id'] }}"
+                                                             data-group="{{ loop.index }}"
+                                                             data-voting="ignore"
+                                                             href="javascript:void(0)">{{ 'voting_labels.amount_of_ignore' | trans | upper }}</a></th>
+                                    {% else %}
+                                        <th class="title">{{ 'voting_labels.amount_of_ignore' | trans | upper }}</th>
+                                    {% endif %}
+                                    <td>{{ item['votes_ignore'] }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endfor %}
+                </div>
+                <br>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
+{% block btnSpeech %}
+    <div class="kt-header-menu-buttons">
+        <a href="{{ path('registration_speech') }}" target="_blank">
+            <button type="button" class="btn btn-primary active">
+                {{ 'buttons.to_monitor' | trans }}
+            </button>
+        </a>
+    </div>
+{% endblock %}
